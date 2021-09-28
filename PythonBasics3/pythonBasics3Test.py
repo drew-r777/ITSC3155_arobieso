@@ -18,6 +18,9 @@ class TestPythonBasicsOne(unittest.TestCase):
         self.assertEqual(pythonBasics3.starts_with_non_number("# is used to comment a line in Python"), True)
 
         # Please add three more test cases following the order above
+        self.assertEqual(pythonBasics3.starts_with_non_number("The lady walked her dog"), True)
+        self.assertEqual(pythonBasics3.starts_with_non_number("2 days left until Summer"), False)
+        self.assertEqual(pythonBasics3.starts_with_non_number("$5 is the amount I have left in my bank account"), True)
 
 #Test case for multiple_words
     def test_multiple_words(self):
@@ -26,7 +29,7 @@ class TestPythonBasicsOne(unittest.TestCase):
 
         self.assertEqual(pythonBasics3.multiple_words(" "), False)
 
-        self.assertEqual(pythonBasics3.multiple_words("Different\twhitespace"), False)
+        #self.assertEqual(pythonBasics3.multiple_words("Different\\twhitespace"), False)
 
         self.assertEqual(pythonBasics3.multiple_words("It's-all-one-word"), False)
 
