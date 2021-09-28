@@ -29,13 +29,17 @@ class TestPythonBasicsOne(unittest.TestCase):
 
         self.assertEqual(pythonBasics3.multiple_words(" "), False)
 
-        #self.assertEqual(pythonBasics3.multiple_words("Different\\twhitespace"), False)
+        self.assertEqual(pythonBasics3.multiple_words("Different\\twhitespace"), False)
 
         self.assertEqual(pythonBasics3.multiple_words("It's-all-one-word"), False)
 
         self.assertEqual(pythonBasics3.multiple_words(" one-sided? "), False)
 
         # Please add three more test cases following the order above
+        self.assertEqual(pythonBasics3.multiple_words("supercalifragilisticexpialidocious"), False)
+        self.assertEqual(pythonBasics3.multiple_words("The dog is brown"), True)
+        self.assertEqual(pythonBasics3.multiple_words("abc123"), False)
+
 
 
 #Test case for reserved_us_tld

@@ -31,8 +31,9 @@ def starts_with_non_number(s):
 # with at least one character on either side!
 def multiple_words(s):
     # YOUR CODE HERE
-    re_SPACE = r"([ +])"
-    if re.search(re_SPACE, s):
+    re_SPACE = r"(.+[\s].+)"
+    result = re.match(re_SPACE, s)
+    if result:
         return True
     return False
 
