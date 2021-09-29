@@ -47,5 +47,9 @@ def multiple_words(s):
 # Hint: the URL should start with https and end with one of the TLDs
 def reserved_us_tld(s):
     # YOUR CODE HERE
-
-    return
+    re_URL = r"(https:\/\/www\.[a-zA-Z0-9]{2,2048}\.((edu)|(gov)|(mil)))"
+    result = re.match(re_URL, s)
+    if result:
+        return True
+    else:
+        return False
