@@ -34,7 +34,7 @@ with app.app_context():
 # In this case it makes it so anyone going to "your-url/" makes this function
 # get called. What it returns is what is shown as the web page
 
-
+@app.route('/')
 @app.route('/index')
 def index():
     a_user =  db.session.query(User).filter_by(email='mogli@uncc.edu')
@@ -43,6 +43,7 @@ def index():
 
 @app.route('/notes')
 def get_notes():
+    #
     a_user = db.session.query(User).filter_by(email='mogli@uncc.edu')
     my_notes = db.session.query(Note).all()
     return render_template('notes.html', notes=my_notes, user=a_user)
@@ -52,13 +53,13 @@ def get_notes():
 def get_note(note_id):
     a_user = db.session.query(User).filter_by(email='mogli@uncc.edu')
     my_note = db.session.query(Note).filter_by(id=note_id)
-    return render_template('note.html', note=notes[int(note_id)], user=a_user)
+    return render_template('note.html', note=my_note, user=a_user)
 
 
 @app.route('/notes/new', methods=['GET', 'POST'])
 def new_note():
     # mock user
-    a_user = {'name': 'Drew', 'email': 'arobieso@uncc.edu'}
+    # a_user = {'name': 'Drew', 'email': 'arobieso@uncc.edu'}
 
     # check method used for request
     if request.method == 'POST':
