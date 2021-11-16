@@ -10,10 +10,10 @@ from flask import redirect, url_for
 from database import db
 from models import Note as Note
 from models import User as User
-from forms import RegisterForm
 import bcrypt
 from flask import session
-from forms import LoginForm
+from models import Comment as Comment
+from forms import RegisterForm, LoginForm, CommentForm
 
 
 app = Flask(__name__)  # create an app
@@ -29,11 +29,6 @@ db.init_app(app)
 # Setup models
 with app.app_context():
     db.create_all()   # run under the app context
-
-#notes = {1: {'title': 'First note', 'text': 'This is my first note', 'date': '10-1-2020'},
-         #2: {'title': 'Second note', 'text': 'This is my second note', 'date': '10-2-2020'},
-         #3: {'title': 'Third note', 'text': 'This is my third note', 'date': '10-3-2020'}
-         #}
 
 # @app.route is a decorator. It gives the function "index" special powers.
 # In this case it makes it so anyone going to "your-url/" makes this function
@@ -61,15 +56,21 @@ def get_notes():
 
 @app.route('/notes/<note_id>')
 def get_note(note_id):
-    a_user = db.session.query(User).filter_by(email='mogli@uncc.edu').one()
-    my_note = db.session.query(Note).filter_by(id=note_id).one()
-    return render_template('note.html', note=my_note, user=a_user)
+    # check if a user is saved in session
+    if session.get('user'):
+        # retrieve note from database
+        my_note = db.session.query(Note).filter_by(id=note_id, user_id=session['user_id']).one()
+
+        # create a comment form object
+        form = CommentForm()
+
+        return render_template('note.html', note=my_note, user=session['user'], form=form)
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route('/notes/new', methods=['GET', 'POST'])
 def new_note():
-    # mock user
-    # a_user = {'name': 'Drew', 'email': 'arobieso@uncc.edu'}
     if session.get('user'):
 
         # check method used for request
@@ -200,6 +201,24 @@ def logout():
         session.clear()
 
     return redirect(url_for('index'))
+
+
+@app.route('/notes/<note_id>/comment', methods=['POST'])
+def new_comment(note_id):
+    if session.get('user'):
+        comment_form = CommentForm()
+        # validate_on_submit only validates using POST
+        if comment_form.validate_on_submit():
+            # get comment data
+            comment_text = request.form['comment']
+            new_record = Comment(comment_text, int(note_id), session['user_id'])
+            db.session.add(new_record)
+            db.session.commit()
+
+        return redirect(url_for('get_note', note_id=note_id))
+
+    else:
+        return redirect(url_for('login'))
 
 
 app.run(host=os.getenv('IP', '127.0.0.1'), port=int(os.getenv('PORT', 5000)), debug=True)
